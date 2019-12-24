@@ -32,6 +32,7 @@ import com.gitblit.Constants.AccessRestrictionType;
 import com.gitblit.Constants.AuthorizationControl;
 import com.gitblit.Constants.PermissionType;
 import com.gitblit.Constants.RegistrantType;
+import com.gitblit.Constants.RpcRequest;
 import com.gitblit.GitBlitException.ForbiddenException;
 import com.gitblit.GitBlitException.UnauthorizedException;
 import com.gitblit.Keys;
@@ -45,6 +46,7 @@ import com.gitblit.models.ServerStatus;
 import com.gitblit.models.TeamModel;
 import com.gitblit.models.UserModel;
 import com.gitblit.servlet.RpcServlet;
+import com.gitblit.utils.JsonUtils;
 import com.gitblit.utils.RpcUtils;
 
 /**
@@ -72,6 +74,14 @@ public class RpcTests extends GitblitUnitTest {
 			GitBlitSuite.stopGitblit();
 		}
 	}
+	
+//	@Test
+//	public void testListTags() throws IOException {
+//		Map<String, Collection<String>> branches = RpcUtils.getTags(url, account,password.toCharArray());
+//		//System.out.println(branches);
+//		assertNotNull("Repository list is null!", branches);
+//	}
+	
 
 	@Test
 	public void testGetProtocolVersion() throws IOException {

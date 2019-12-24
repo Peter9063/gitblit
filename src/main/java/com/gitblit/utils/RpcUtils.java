@@ -130,6 +130,22 @@ public class RpcUtils {
 	}
 
 	/**
+	 * 
+	 * @param serverUrl
+	 * @param account
+	 * @param password
+	 * @return
+	 * @throws IOException
+	 */
+	public static Map<String, Collection<String>> getTags(String serverUrl, String account,
+			char[] password) throws IOException {
+		String url = asLink(serverUrl, RpcRequest.LIST_TAGS);
+		Map<String, Collection<String>> tags = JsonUtils.retrieveJson(url, BRANCHES_TYPE,
+				account, password);
+		return tags;
+	}
+	
+	/**
 	 * Retrieves a map of the repositories at the remote gitblit instance keyed
 	 * by the repository clone url.
 	 *

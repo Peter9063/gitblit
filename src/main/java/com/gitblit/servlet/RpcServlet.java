@@ -118,7 +118,38 @@ public class RpcServlet extends JsonServlet {
 				repositories.put(url, model);
 			}
 			result = repositories;
-		} else if (RpcRequest.LIST_BRANCHES.equals(reqType)) {
+		} else if (RpcRequest.LIST_TAGS.equals(reqType)) {
+			Map<String, List<String>> returnTags = new HashMap<String, List<String>>();
+			List<RepositoryModel> models = gitblit.getRepositoryModels(user);
+			for (RepositoryModel model : models) {
+				if (!model.hasCommits) {
+					// skip empty repository
+					continue;
+				}
+				if (model.isCollectingGarbage) {
+					// skip garbage collecting repository
+					logger.warn(MessageFormat.format("Temporarily excluding {0} from RPC, busy collecting garbage",
+							model.name));
+					continue;
+				}
+				// get local branches
+				Repository repository = gitblit.getRepository(model.name);
+				List<RefModel> refs = JGitUtils.getTags(repository, false, -1);
+//				if (model.showRemoteBranches) {
+//					// add remote branches if repository displays them
+//					refs.addAll(JGitUtils.getRemoteBranches(repository, false, -1));
+//				}
+				if (refs.size() > 0) {
+					List<String> branches = new ArrayList<String>();
+					for (RefModel ref : refs) {
+						branches.add(ref.getName());
+					}
+					returnTags.put(model.name, branches);
+				}
+				repository.close();
+			}
+			result = returnTags;
+		}else if (RpcRequest.LIST_BRANCHES.equals(reqType)) {
 			// list all local branches in all repositories accessible to user
 			Map<String, List<String>> localBranches = new HashMap<String, List<String>>();
 			List<RepositoryModel> models = gitblit.getRepositoryModels(user);
